@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# 指定输入和输出目录，如果不存在就创建
+input_dir="/home/lihy/01.1009rawdata"
+output_dir="/home/lihy/02.1009result"
+
+# 遍历所有匹配的文件
+for file in "$input_dir"/*_L001_R1_001.fastq.gz "$input_dir"/*_L001_R2_001.fastq.gz; do
+    # 使用正则表达式进行替换，确保在 HRR号 和 L001之间插入 S1
+    new_name=$(echo "$file" | sed -E 's/(HRR[0-9]+)_L001/\1_S1_L001/')
+    
+    # 仅当文件名发生变化时进行重命名
+    if [[ "$file" != "$new_name" ]]; then
+        mv "$file" "$new_name"
+        echo "Renamed: $file -> $new_name"
+    else
+        echo "No renaming needed: $file"
+    fi
+done
+
+# 设置路径和参数
+TRANSCRIPTOME="/home/Lulab/ref/10X/refdata-gex-GRCh38-2024-A"
+EXPECT_CELLS=1000
+
+source_dir="/home/lihy/projects/HRA001009"
+
+# 获取所有以 HRR 开头的子文件夹名并赋值给 SAMPLE_LIST
+SAMPLE_LIST=($(ls -d $source_dir/HRR*/ | xargs -n 1 basename))
+
+echo "$SAMPLE_LIST"
+
+# 循环读取FASTQ文件
+for SAMPLE in "${SAMPLE_LIST[@]}"; do
+    # 获取对应的配对FASTQ文件路径
+    FASTQ_R1=$(find $input_dir -name "${SAMPLE}_S1_L001_R1_001.fastq.gz" | sort)
+    FASTQ_R2=$(find $input_dir -name "${SAMPLE}_S1_L001_R2_001.fastq.gz" | sort)
+
+    # 确保每个样本都有配对的FASTQ文件（R1和R2）
+    if [ -n "$FASTQ_R1" ] && [ -n "$FASTQ_R2" ]; then
+        # 获取FASTQ文件所在的目录
+        FASTQ_DIR=$(dirname "$FASTQ_R1")
+
+        # 运行 Cellranger count
+        cellranger count --id=$SAMPLE \
+          --transcriptome=$TRANSCRIPTOME \
+          --fastqs=$input_dir \
+          --sample=$SAMPLE \
+          --expect-cells=$EXPECT_CELLS \
+          --nosecondary \
+          --create-bam=false \
+          --disable-ui \
+          --output-dir=$output_dir/$SAMPLE
+    else
+        echo "FASTQ files for $SAMPLE are missing or not properly paired. Skipping..."
+    fi
+done
