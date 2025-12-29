@@ -42,3 +42,23 @@ Although complement inhibitors are widely used in clinical practice, their effic
 
     Omics → miRNA → Target genes → Drugs → Expected phenotypes
     
+📁 mRNA/ — Bulk mRNA-seq Analysis
+
+This folder contains scripts and results related to bulk mRNA differential expression and functional enrichment analysis based on the PIGA-KO PNH model.
+
+📁 miRNA/ — miRNA Differential Expression Analysis
+
+This folder includes analyses related to miRNA expression profiling and differential analysis.
+
+📁 miRNA_Target_Gene/ — miRNA–Target Gene Integration
+
+This directory focuses on miRNA target prediction and validation-based filtering, forming the basis of the miRNA–mRNA regulatory network.
+
+📁 scRNAseq_analysis/ — Single-Cell RNA-seq Analysis
+
+This folder contains scripts and outputs related to single-cell RNA-seq integration, cell-type identification, functional analysis, and network analysis.
+
+📁 upstream/ — Upstream Input Gene Lists
+
+This folder contains preprocessed gene/miRNA lists used as inputs for downstream analyses.
+
