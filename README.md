@@ -5,9 +5,11 @@ This repository contains the complete analysis pipeline and scripts used in our 
 🧬 Background
 
 PNH is a clonal haematopoietic stem cell disorder characterized by:
+
 1. Intravascular hemolysis
 2. Thrombosis
 3. Bone marrow failure
+   
 Although complement inhibitors are widely used in clinical practice, their efficacy is limited, underscoring the need for novel therapeutic targets and alternative treatment strategies. This study aims to provide a multi-omics–based theoretical foundation for PNH pathogenesis and drug repurposing.
 
 🔬 Study Design and Workflow
